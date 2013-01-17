@@ -1,10 +1,17 @@
-FLAGS = -O3 -Wall -msse2 -m64 -flax-vector-conversions -lpthread -g
+FLAGS = -c -O3 -Wall -g
 
-./example: lru_cache.o example.o
+CC=g++
 
-lru_cache.o: src/lru_cache.cpp src/lru_cache.h
-	g++ $(FLAGS) -c src/lru_cache.cpp -o lru_cache.o
-example.o: src/example.cpp
-	g++ $(FLAGS) -c src/example.cpp example.o
+all: lru_cache
+
+lru_cache: example.o lru_cache.o
+	$(CC) example.o lru_cache.o
+
+example.o: lru_cache.o example.cpp
+	$(CC) $(FLAGS) example.cpp
+
+lru_cache.o: lru_cache.cpp
+	$(CC) $(FLAGS) lru_cache.cpp
+
 clean:
-	rm *.o example
+	rm -rf *.o lru_cache
